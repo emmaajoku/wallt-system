@@ -1,0 +1,67 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type User {
+  userId: String!
+  firstName: String!
+  lastName: String!
+  emailAddress: String!
+  password: String!
+  phone: String!
+  transactionPassword: String!
+  verified: Boolean!
+  resetToken: String!
+  dob: String!
+  isAdmin: Boolean!
+  deviceId: String!
+  deviceIp: String!
+  platform: String!
+  lastLoggedIn: String!
+}
+
+type JwtUserResponseModel {
+  """
+  The user's access token. To be added in the header when making requests to guarded api routes
+  """
+  accessToken: String!
+
+  """The user's profile details"""
+  user: User!
+}
+
+type Wallet {
+  id: String!
+  balance: Int!
+  user: User
+  userId: String
+}
+
+type TransactionModel {
+  id: String!
+  userId: String!
+  amount: Int!
+  type: String!
+  status: String!
+  reference: String!
+  narration: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type Query {
+  getUserWallet(userId: String!): Wallet!
+  getUserTransactions(userId: String!): TransactionModel!
+  getTransactionDetail(userId: String!, transactionId: String!): TransactionModel!
+}
+
+type Mutation {
+  login(emailAddress: String!, password: String!): JwtUserResponseModel!
+  register(firstName: String, lastName: String, emailAddress: String, password: String, phone: String, deviceId: String, deviceModel: String, deviceIp: String, transactionPassword: String, platform: String): User!
+  transfer(userId: String, receiver: String!, amount: Float!, transactionPassword: String!): Wallet!
+}

@@ -1,0 +1,23 @@
+# Base Docker Compose File. We assume usage of redis by most (all) APIs due to usage of OAuth by all services
+# We also assume mongo usage in our code.
+version: '3'
+services:
+    database:
+        container_name: walletsystem_mongo
+        image: mongo
+        ports:
+        - 27017:27017
+        volumes:
+        - ./data:/data/db
+        expose:
+            - "27017"
+        environment:
+            MONGO_USER: "walletsystem"
+            MONGO_PASSWORD: "walletsystem"
+            MONGO_DATABASE: "walletsystem"
+            MONGO_ALLOW_EMPTY_PASSWORD: "yes"
+        networks:
+            - main_network
+networks:
+    main_network:
+        driver: bridge

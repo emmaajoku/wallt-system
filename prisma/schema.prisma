@@ -1,0 +1,70 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = []
+}
+
+datasource db {
+  provider     = "mongodb"
+  url          = env("MONGO_DB_URL")
+  relationMode = "prisma"
+}
+
+model User {
+  userId          String @id @default(auto()) @map("_id") @db.ObjectId
+  emailAddress    String?   @default("")
+  firstName       String?   @default("")
+  lastName        String?   @default("")
+  password         String?
+  phone           String?
+  transactionPassword String?   @default("")
+  verified        Boolean?  @default(true)
+  resetToken      String?   @default("")
+  resetTokenExpiry BigInt?  @default(10000)
+  dob             String?   @default("")
+  isAdmin         Boolean?  @default(false)
+  deviceId        String?   @default("")
+  deviceIp        String?   @default("")
+  deviceModel     String?   @default("")
+  platform        String?   @default("web")
+  privateKey      String?   @default("")
+  lastLoggedIn    String?   @default("")
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  wallet          Wallet?
+  @@map(name: "user_accounts")
+}
+
+model Emailer {
+ id          String   @id @default(auto()) @map("_id") @db.ObjectId
+ verifyToken String?
+ emailAddress       String?
+ verifyTokenExpiry   BigInt   @default(900000) 
+ valid       Boolean  @default(true)
+ createdAt   DateTime @default(now())
+ updatedAt   DateTime @updatedAt
+}
+
+model Wallet {
+  id          String @id @default(auto()) @map("_id") @db.ObjectId
+  balance   Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  userId    String?
+  user      User     @relation(fields: [id], references: [userId])
+}
+
+model Transactions {
+  id          String @id @default(auto()) @map("_id") @db.ObjectId
+  userId     String
+  amount     Int       @default(0)
+  type       String
+  status     String
+  reference  String
+  narration  String
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+}
+
