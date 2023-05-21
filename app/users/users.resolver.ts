@@ -11,12 +11,13 @@ import { RequestVerifyEmailArgs } from './models/request-verify-email.args';
 import { ResetPasswordArgs } from './models/reset-pin.args';
 import { ResetTransactionPasswordArgs } from './models/reset-transaction-pin.args';
 import { UsersService } from './users.service';
+import { customerGuard } from 'app/auth/guards/customer.guard';
 
 @Resolver()
 export class UsersResolver {
   constructor(private userService: UsersService) {}
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(customerGuard)
   @Query(() => UserModel)
   async findUserById(
     @Context('user') user: { userId: string },
@@ -30,7 +31,7 @@ export class UsersResolver {
     };
   }
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(customerGuard)
   @Mutation(() => UserModel)
   async update(
     @Args('id') id: string,
@@ -39,7 +40,7 @@ export class UsersResolver {
     return await this.userService.updateUser(id, input);
   }
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(customerGuard)
   @Mutation(() => UserModel)
   async changePassword(
     @Args('input') input: ChangePasswordArgs,
@@ -48,7 +49,7 @@ export class UsersResolver {
     return await this.userService.updatePassword(input, user.userId);
   }
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(customerGuard)
   @Mutation(() => UserModel)
   async setTransactionPassword(
     @Args() data: UpdateTransactionPasswordArgs,
@@ -56,7 +57,7 @@ export class UsersResolver {
     return await this.userService.setTransactionPassword(data);
   }
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(customerGuard)
   @Mutation(() => UserModel)
   async resetTransactionPassword(
     @Args() input: ResetTransactionPasswordArgs,
@@ -67,7 +68,7 @@ export class UsersResolver {
     );
   }
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(customerGuard)
   @Mutation(() => UserModel)
   async sendVerificationEmail(
     @Args() requestVerifyEmailArgs: RequestVerifyEmailArgs,
@@ -104,7 +105,7 @@ export class UsersResolver {
     });
   }
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(customerGuard)
   @Mutation(() => UserModel)
   async changeTransactionPassword(
     @Args() updateTransactionPasswordArgs: UpdateTransactionPasswordArgs,

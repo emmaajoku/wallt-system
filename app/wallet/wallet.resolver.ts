@@ -18,7 +18,7 @@ export class WalletResolver {
   async getUserWallet(@Args('userId') userId: string): Promise<Wallet> {
     return this.walletService.getUserWallet(userId);
   }
-  // @UseGuards(JwtAuthGuard)
+  @UseGuards(customerGuard)
   @Mutation(() => WalletModel)
   async transfer(@Args() payload: TransferArgs): Promise<ResponseStruct> {
     return this.walletService.transfer(payload);
