@@ -13,11 +13,6 @@ async function bootstrap(): Promise<void> {
     cors: true,
   });
 
-  app.use(
-    '/payments/endpoints/webhook/stripe',
-    bodyParser.raw({ type: 'application/json' }),
-  );
-
   app.useGlobalPipes(new ValidationPipe());
   app.useGlobalInterceptors(new TransformInterceptor());
   app.enableCors();
@@ -26,8 +21,6 @@ async function bootstrap(): Promise<void> {
   app.setViewEngine('hbs');
   app.use(requestIp.mw());
 
-  // Allow maximum file size of 10 Megabytes
-  // app.use(graphqlUploadExpress({ maxFileSize: 10 * 1000 * 1000 }));
 
   const prismaService: PrismaDatabaseService = app.get<PrismaDatabaseService>(
     PrismaDatabaseService,

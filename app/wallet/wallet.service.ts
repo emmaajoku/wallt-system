@@ -1,5 +1,5 @@
 import { User, Wallet } from '@prisma/client';
-import { HttpStatus, Injectable } from '@nestjs/common';
+import { HttpStatus, Inject, Injectable } from '@nestjs/common';
 import {
   TransactionType,
   TransactionStatus,
@@ -19,10 +19,12 @@ import { mailStructure } from 'app/mail/interface-send/mail.send';
 import { EmailOption } from 'app/mail/types/mail.types';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { TransactionAgs } from 'app/transaction/dto/transaction.args';
+import { Producer } from '@nestjs/microservices/external/kafka.interface';
 
 @Injectable()
 export class WalletService {
   constructor(
+    @Inject('KAFKA_PRODUCER') private kafkaProducer: Producer,
     private userService: UsersService,
     private prismaDatabaseService: PrismaDatabaseService,
     private eventEmitter: EventEmitter2,
@@ -174,6 +176,15 @@ export class WalletService {
             },
           );
 
+          // send kafka topics
+          const id = Math.floor(Math.random() * 100);
+          this.sendKafkaEvent(`${id}`, {
+            eventType: 'Transfer',
+            id,
+            ...payload,
+          });
+          
+          // send transactoion emails
           this.eventEmitter.emit('token.sent', optionsSender);
           this.eventEmitter.emit('token.recieved', optionsReciever);
         },
@@ -199,4 +210,13 @@ export class WalletService {
       throw new InternalErrorException();
     }
   }
+
+
+  sendKafkaEvent(key: string, value: { userId?: string; receiver: string; amount: number; transactionPassword: string; eventType: string; id: number; }) {
+    this.kafkaProducer.send({
+      topic: 'transfer',
+      messages: [{ key, value: JSON.stringify(value) }],
+    });
+  }
+
 }
