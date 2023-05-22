@@ -5,8 +5,6 @@ import { TransferArgs } from './dto/transfer.args';
 import { ResponseStruct } from './interfaces';
 import { Wallet } from '@prisma/client';
 import { UseGuards } from '@nestjs/common';
-import { JwtAuthGuard } from 'app/auth/jwt-auth.guard';
-import { UserJwtStrategy } from 'app/auth/guards/user.strategy';
 import { customerGuard } from 'app/auth/guards/customer.guard';
 
 @Resolver()

@@ -8,7 +8,6 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { UsersService } from 'app/users/users.service';
 import { UsersModule } from 'app/users/users.module';
 import { EventEmitter2, EventEmitterModule } from '@nestjs/event-emitter';
-import { JwtStrategy } from './jwt.strategy';
 import { customerJwtStrategy } from './guards/customer.strategy';
 
 @Module({

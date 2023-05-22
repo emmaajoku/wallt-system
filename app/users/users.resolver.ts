@@ -1,6 +1,5 @@
 import { Resolver, Query, Mutation, Args, Context } from '@nestjs/graphql';
 import { HttpStatus, UseGuards } from '@nestjs/common';
-import { JwtAuthGuard } from 'app/auth/jwt-auth.guard';
 import { ResponseStruct } from 'app/wallet/interfaces/response.interface';
 import { UserModel } from './models/user.model';
 import { User } from '@prisma/client';
